@@ -1,4 +1,4 @@
-module modbusclient
+module github.com/Yangsta911/zhonghonghvac-go
 
 go 1.22.0
 
