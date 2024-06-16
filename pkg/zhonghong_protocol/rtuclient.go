@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"time"
+	"go.bug.st/serial"
 )
 
 const (
@@ -115,24 +116,37 @@ func (mb *rtuPackager) Decode(adu []byte) (pdu *ProtocolDataUnit, err error) {
 	return
 }
 
-// rtuSerialTransporter implements Transporter interface.
-type rtuSerialTransporter struct {
-	serialPort
-}
 
-func (mb *rtuSerialTransporter) Send(aduRequest []byte) (aduResponse []byte, err error) {
-	// Make sure port is connected
-	if err = mb.serialPort.connect(); err != nil {
-		return
+
+func Send(aduRequest []byte) (aduResponse []byte, err error) {
+	ports, err := serial.GetPortsList()
+	if err != nil {
+		log.Fatal(err)
 	}
-	// Start the timer to close when idle
-	mb.serialPort.lastActivity = time.Now()
-	mb.serialPort.startCloseTimer()
+	if len(ports) == 0 {
+		log.Fatal("No serial ports found!")
+	}
 
+	// Print the list of detected ports
+	for _, port := range ports {
+		fmt.Printf("Found port: %v\n", port)
+	}
+
+	// Open the first serial port detected at 9600bps N81
+	mode := &serial.Mode{
+		BaudRate: 9600,
+		Parity:   serial.NoParity,
+		DataBits: 8,
+		StopBits: serial.OneStopBit,
+	}
+	port, err := serial.Open(ports[0], mode)
+	if err != nil {
+		log.Fatal(err)
+	}
 	// Send the request
-	mb.serialPort.logf("zonghongprotocol: sending % x\n", aduRequest)
-	if _, err = mb.port.Write(aduRequest); err != nil {
-		return
+	n, err := port.Write(aduRequest)
+	if err != nil {
+		log.Fatal(err)
 	}
 	function := aduRequest[1]
 	functionFail := aduRequest[1] & 0x80
@@ -171,13 +185,11 @@ func (mb *rtuSerialTransporter) Send(aduRequest []byte) (aduResponse []byte, err
 		return
 	}
 	aduResponse = data[:n]
-	mb.serialPort.logf("zonghongprotocol: received % x\n", aduResponse)
-	return
 }
 
 // calculateDelay roughly calculates time needed for the next frame.
 // See zonghongprotocol over Serial Line - Specification and Implementation Guide (page 13).
-func (mb *rtuSerialTransporter) calculateDelay(chars int) time.Duration {
+func calculateDelay(chars int) time.Duration {
 	var characterDelay, frameDelay int // us
 
 	if mb.BaudRate <= 0 || mb.BaudRate > 19200 {
