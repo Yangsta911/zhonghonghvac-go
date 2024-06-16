@@ -6,19 +6,8 @@ import (
 
 const (
 	// Bit access
-	FuncCodeReadDiscreteInputs = 2
-	FuncCodeReadCoils          = 1
-	FuncCodeWriteSingleCoil    = 5
-	FuncCodeWriteMultipleCoils = 15
-
-	// 16-bit access
-	FuncCodeReadInputRegisters         = 4
-	FuncCodeReadHoldingRegisters       = 3
-	FuncCodeWriteSingleRegister        = 6
-	FuncCodeWriteMultipleRegisters     = 16
-	FuncCodeReadWriteMultipleRegisters = 23
-	FuncCodeMaskWriteRegister          = 22
-	FuncCodeReadFIFOQueue              = 24
+	FuncCodeReadGateway = 176
+	HeadCodeReadGateway = 255
 )
 
 const (
