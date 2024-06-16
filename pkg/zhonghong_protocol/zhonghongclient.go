@@ -1,4 +1,4 @@
-package modbusclient
+package zhonghongprotocol
 
 import (
 	"encoding/binary"

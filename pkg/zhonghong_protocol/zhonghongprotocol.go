@@ -1,4 +1,4 @@
-package modbusclient
+package zhonghongprotocol
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 
 const (
 	// Bit access
-	FuncCodeReadGateway = 176
-	HeadCodeReadGateway = 255
+	FuncCodeReadGateway = 0xB0
+	HeadCodeReadGateway = 0xFF
 )
 
 const (

@@ -1,4 +1,4 @@
-package modbusclient
+package zhonghongprotocol
 
 type Client interface {
 	// Bit access
