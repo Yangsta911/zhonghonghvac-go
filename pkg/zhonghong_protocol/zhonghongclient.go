@@ -29,6 +29,7 @@ func (mb *client) ReadGateway() (results []byte, err error) {
 	}
 	_, err = mb.send(&request)
 	// todo check response data
+	return
 }
 
 func (mb *client) send(request *ProtocolDataUnit) (response *ProtocolDataUnit, err error) {
@@ -57,6 +58,7 @@ func (mb *client) send(request *ProtocolDataUnit) (response *ProtocolDataUnit, e
 		err = fmt.Errorf("modbus: response data is empty")
 		return
 	}
+	return
 }
 
 func dataBlock(value ...uint16) []byte {

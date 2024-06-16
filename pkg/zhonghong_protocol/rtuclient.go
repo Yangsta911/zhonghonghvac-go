@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io"
 	"time"
-	"go.bug.st/serial"
 )
 
 const (
@@ -116,37 +115,24 @@ func (mb *rtuPackager) Decode(adu []byte) (pdu *ProtocolDataUnit, err error) {
 	return
 }
 
+// rtuSerialTransporter implements Transporter interface.
+type rtuSerialTransporter struct {
+	serialPort
+}
 
+func (mb *rtuSerialTransporter) Send(aduRequest []byte) (aduResponse []byte, err error) {
+	// Make sure port is connected
+	if err = mb.serialPort.connect(); err != nil {
+		return
+	}
+	// Start the timer to close when idle
+	mb.serialPort.lastActivity = time.Now()
+	mb.serialPort.startCloseTimer()
 
-func Send(aduRequest []byte) (aduResponse []byte, err error) {
-	ports, err := serial.GetPortsList()
-	if err != nil {
-		log.Fatal(err)
-	}
-	if len(ports) == 0 {
-		log.Fatal("No serial ports found!")
-	}
-
-	// Print the list of detected ports
-	for _, port := range ports {
-		fmt.Printf("Found port: %v\n", port)
-	}
-
-	// Open the first serial port detected at 9600bps N81
-	mode := &serial.Mode{
-		BaudRate: 9600,
-		Parity:   serial.NoParity,
-		DataBits: 8,
-		StopBits: serial.OneStopBit,
-	}
-	port, err := serial.Open(ports[0], mode)
-	if err != nil {
-		log.Fatal(err)
-	}
 	// Send the request
-	n, err := port.Write(aduRequest)
-	if err != nil {
-		log.Fatal(err)
+	mb.serialPort.logf("modbus: sending % x\n", aduRequest)
+	if _, err = mb.serialPort.Write(aduRequest); err != nil {
+		return
 	}
 	function := aduRequest[1]
 	functionFail := aduRequest[1] & 0x80
@@ -158,7 +144,7 @@ func Send(aduRequest []byte) (aduResponse []byte, err error) {
 	var data [rtuMaxSize]byte
 	//We first read the minimum length and then read either the full package
 	//or the error package, depending on the error status (byte 2 of the response)
-	n, err = io.ReadAtLeast(mb.port, data[:], rtuMinSize)
+	n, err = io.ReadAtLeast(mb.serialPort, data[:], rtuMinSize)
 	if err != nil {
 		return
 	}
@@ -168,7 +154,7 @@ func Send(aduRequest []byte) (aduResponse []byte, err error) {
 		if n < bytesToRead {
 			if bytesToRead > rtuMinSize && bytesToRead <= rtuMaxSize {
 				if bytesToRead > n {
-					n1, err = io.ReadFull(mb.port, data[n:bytesToRead])
+					n1, err = io.ReadFull(mb.serialPort, data[n:bytesToRead])
 					n += n1
 				}
 			}
@@ -176,7 +162,7 @@ func Send(aduRequest []byte) (aduResponse []byte, err error) {
 	} else if data[1] == functionFail {
 		//for error we need to read 5 bytes
 		if n < rtuExceptionSize {
-			n1, err = io.ReadFull(mb.port, data[n:rtuExceptionSize])
+			n1, err = io.ReadFull(mb.serialPort, data[n:rtuExceptionSize])
 		}
 		n += n1
 	}
@@ -185,19 +171,21 @@ func Send(aduRequest []byte) (aduResponse []byte, err error) {
 		return
 	}
 	aduResponse = data[:n]
+	mb.serialPort.logf("zonghongprotocol: received % x\n", aduResponse)
+	return
 }
 
 // calculateDelay roughly calculates time needed for the next frame.
 // See zonghongprotocol over Serial Line - Specification and Implementation Guide (page 13).
-func calculateDelay(chars int) time.Duration {
+func (mb *rtuSerialTransporter) calculateDelay(chars int) time.Duration {
 	var characterDelay, frameDelay int // us
 
-	if mb.BaudRate <= 0 || mb.BaudRate > 19200 {
+	if mb.serialPort.BaudRate <= 0 || mb.serialPort.BaudRate > 19200 {
 		characterDelay = 750
 		frameDelay = 1750
 	} else {
-		characterDelay = 15000000 / mb.BaudRate
-		frameDelay = 35000000 / mb.BaudRate
+		characterDelay = 15000000 / mb.serialPort.BaudRate
+		frameDelay = 35000000 / mb.serialPort.BaudRate
 	}
 	return time.Duration(characterDelay*chars+frameDelay) * time.Microsecond
 }
