@@ -50,7 +50,7 @@ func RTUClient(address string) Client {
 
 // rtuPackager implements Packager interface.
 type rtuPackager struct {
-	SlaveId byte
+	// SlaveId byte
 }
 
 // Encode encodes PDU in a RTU frame:
