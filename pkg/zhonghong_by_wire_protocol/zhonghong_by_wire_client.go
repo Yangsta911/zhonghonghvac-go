@@ -1,33 +1,35 @@
-package zhonghongprotocol
+package zhonghongprotocolbywireprotocol
 
 import (
 	"encoding/binary"
 	"fmt"
+
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/zhonghong/zhonghongprotocol"
 )
 
 // ClientHandler is the interface that groups the Packager and Transporter methods.
-type ClientHandlerRemote interface {
-	Packager
-	Transporter
+type ClientHandlerByWire interface {
+	zhonghongprotocol.Packager
+	zhonghongprotocol.Transporter
 }
 
-type clientremote struct {
-	packager    Packager
-	transporter Transporter
+type clientbywire struct {
+	packager    zhonghongprotocol.Packager
+	transporter zhonghongprotocol.Transporter
 }
 
 // NewClient creates a new Zhonghonh client with given backend handler.
-func NewClientRemote(handler ClientHandlerRemote) ClientRemote {
-	return &clientremote{packager: handler, transporter: handler}
+func NewClientRemote(handler ClientHandlerByWire) ClientByWire {
+	return &clientbywire{packager: handler, transporter: handler}
 }
 
-func (mb *clientremote) FunctionCheck(address []uint16) (results *ProtocolDataUnit, err error) {
+func (mb *clientbywire) FunctionCheck(address []uint16) (results *zhonghongprotocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
-	request := ProtocolDataUnit{
-		Header:       HeadCodeFunctionCheck,
-		FunctionCode: FuncCodeFunctionCheck,
+	request := zhonghongprotocol.ProtocolDataUnit{
+		Header:       zhonghongprotocol.HeadCodeFunctionCheck,
+		FunctionCode: zhonghongprotocol.FuncCodeFunctionCheck,
 		CommandType:  "remote",
 		Address:      addressLen,
 	}
@@ -39,13 +41,13 @@ func (mb *clientremote) FunctionCheck(address []uint16) (results *ProtocolDataUn
 	return resp, nil
 }
 
-func (mb *clientremote) StatusCheck(address []uint16) (results *ProtocolDataUnit, err error) {
+func (mb *clientbywire) StatusCheck(address []uint16) (results *zhonghongprotocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
-	request := ProtocolDataUnit{
-		Header:       HeadCodeStatusCheck,
-		FunctionCode: FuncCodeStatusCheck,
+	request := zhonghongprotocol.ProtocolDataUnit{
+		Header:       zhonghongprotocol.HeadCodeStatusCheck,
+		FunctionCode: zhonghongprotocol.FuncCodeStatusCheck,
 		CommandType:  "remote",
 		Address:      addressLen,
 	}
@@ -57,15 +59,15 @@ func (mb *clientremote) StatusCheck(address []uint16) (results *ProtocolDataUnit
 	return resp, nil
 }
 
-func (mb *clientremote) ControlOn(address []uint16, commands []uint16) (results *ProtocolDataUnit, err error) {
+func (mb *clientbywire) ControlOn(address []uint16, commands []uint16) (results *zhonghongprotocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
 	newArr = PrependUint16(commands, ON)
 	commandsOn := dataBlockArray(newArr)
-	request := ProtocolDataUnit{
-		Header:       HeadCodeOnOff,
-		FunctionCode: FuncCodeOnOff,
+	request := zhonghongprotocol.ProtocolDataUnit{
+		Header:       zhonghongprotocol.HeadCodeOnOff,
+		FunctionCode: zhonghongprotocol.FuncCodeOnOff,
 		CommandType:  "remote",
 		Address:      addressLen,
 		Commands:     commandsOn,
@@ -78,15 +80,15 @@ func (mb *clientremote) ControlOn(address []uint16, commands []uint16) (results 
 	return resp, nil
 }
 
-func (mb *clientremote) ControlOff(address []uint16, commands []uint16) (results *ProtocolDataUnit, err error) {
+func (mb *clientbywire) ControlOff(address []uint16, commands []uint16) (results *zhonghongprotocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
 	newArr = PrependUint16(commands, OFF)
 	commandsOff := dataBlockArray(newArr)
-	request := ProtocolDataUnit{
-		Header:       HeadCodeOnOff,
-		FunctionCode: FuncCodeOnOff,
+	request := zhonghongprotocol.ProtocolDataUnit{
+		Header:       zhonghongprotocol.HeadCodeOnOff,
+		FunctionCode: zhonghongprotocol.FuncCodeOnOff,
 		CommandType:  "remote",
 		Address:      addressLen,
 		Commands:     commandsOff,
@@ -99,13 +101,13 @@ func (mb *clientremote) ControlOff(address []uint16, commands []uint16) (results
 	return resp, nil
 }
 
-func (mb *clientremote) ErrorCheck(address []uint16) (results *ProtocolDataUnit, err error) {
+func (mb *clientbywire) ErrorCheck(address []uint16) (results *zhonghongprotocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
-	request := ProtocolDataUnit{
-		Header:       HeadCodeErrorCheck,
-		FunctionCode: FuncCodeErrorCheck,
+	request := zhonghongprotocol.ProtocolDataUnit{
+		Header:       zhonghongprotocol.HeadCodeErrorCheck,
+		FunctionCode: zhonghongprotocol.FuncCodeErrorCheck,
 		CommandType:  "remote",
 		Address:      addressLen,
 	}
@@ -117,13 +119,13 @@ func (mb *clientremote) ErrorCheck(address []uint16) (results *ProtocolDataUnit,
 	return resp, nil
 }
 
-func (mb *clientremote) FreshAirCheck(address []uint16) (results *ProtocolDataUnit, err error) {
+func (mb *clientbywire) FreshAirCheck(address []uint16) (results *zhonghongprotocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
-	request := ProtocolDataUnit{
-		Header:       HeadCodeFreshAirCheck,
-		FunctionCode: FuncCodeFreshAirCheck,
+	request := zhonghongprotocol.ProtocolDataUnit{
+		Header:       zhonghongprotocol.HeadCodeFreshAirCheck,
+		FunctionCode: zhonghongprotocol.FuncCodeFreshAirCheck,
 		CommandType:  "remote",
 		Address:      addressLen,
 	}
@@ -135,15 +137,15 @@ func (mb *clientremote) FreshAirCheck(address []uint16) (results *ProtocolDataUn
 	return resp, nil
 }
 
-func (mb *clientremote) FreshAirControlOn(address []uint16, commands []uint16) (results *ProtocolDataUnit, err error) {
+func (mb *clientbywire) FreshAirControlOn(address []uint16, commands []uint16) (results *zhonghongprotocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
 	newArr = PrependUint16(commands, ON)
 	commandsOn := dataBlockArray(newArr)
-	request := ProtocolDataUnit{
-		Header:       HeadCodeOnOff,
-		FunctionCode: FuncCodeOnOff,
+	request := zhonghongprotocol.ProtocolDataUnit{
+		Header:       zhonghongprotocol.HeadCodeOnOff,
+		FunctionCode: zhonghongprotocol.FuncCodeOnOff,
 		CommandType:  "remote",
 		Address:      addressLen,
 		Commands:     commandsOn,
@@ -156,15 +158,15 @@ func (mb *clientremote) FreshAirControlOn(address []uint16, commands []uint16) (
 	return resp, nil
 }
 
-func (mb *clientremote) FreshAirControlOff(address []uint16, commands []uint16) (results *ProtocolDataUnit, err error) {
+func (mb *clientbywire) FreshAirControlOff(address []uint16, commands []uint16) (results *zhonghongprotocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
 	newArr = PrependUint16(commands, OFF)
 	commandsOff := dataBlockArray(newArr)
-	request := ProtocolDataUnit{
-		Header:       HeadCodeOnOff,
-		FunctionCode: FuncCodeOnOff,
+	request := zhonghongprotocol.ProtocolDataUnit{
+		Header:       zhonghongprotocol.HeadCodeOnOff,
+		FunctionCode: zhonghongprotocol.FuncCodeOnOff,
 		CommandType:  "remote",
 		Address:      addressLen,
 		Commands:     commandsOff,
@@ -177,13 +179,13 @@ func (mb *clientremote) FreshAirControlOff(address []uint16, commands []uint16) 
 	return resp, nil
 }
 
-func (mb *clientremote) FreshAirErrorCheck(address []uint16) (results *ProtocolDataUnit, err error) {
+func (mb *clientbywire) FreshAirErrorCheck(address []uint16) (results *zhonghongprotocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
-	request := ProtocolDataUnit{
-		Header:       HeadCodeFreshAirErrorCheck,
-		FunctionCode: FuncCodeFreshAirErrorCheck,
+	request := zhonghongprotocol.ProtocolDataUnit{
+		Header:       zhonghongprotocol.HeadCodeFreshAirErrorCheck,
+		FunctionCode: zhonghongprotocol.FuncCodeFreshAirErrorCheck,
 		CommandType:  "remote",
 		Address:      addressLen,
 	}
@@ -195,7 +197,7 @@ func (mb *clientremote) FreshAirErrorCheck(address []uint16) (results *ProtocolD
 	return resp, nil
 }
 
-func (mb *clientremote) send(request *ProtocolDataUnit) (response *ProtocolDataUnit, err error) {
+func (mb *clientbywire) send(request *zhonghongprotocol.ProtocolDataUnit) (response *zhonghongprotocol.ProtocolDataUnit, err error) {
 	aduRequest, err := mb.packager.Encode(request)
 	if err != nil {
 		return
@@ -246,8 +248,8 @@ func PrependUint16(slice []uint16, element uint16) []uint16 {
 	return newSlice
 }
 
-func responseError(response *ProtocolDataUnit) error {
-	mbError := &ZhonghongError{FunctionCode: response.FunctionCode}
+func responseError(response *zhonghongprotocol.ProtocolDataUnit) error {
+	mbError := &zhonghongprotocol.ZhonghongError{FunctionCode: response.FunctionCode}
 	if response.Data != nil && len(response.Data) > 0 {
 		mbError.ExceptionCode = response.Data[0]
 	}
