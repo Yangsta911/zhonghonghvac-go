@@ -4,13 +4,11 @@ import (
 	"io"
 	"net"
 	"time"
-
-	"github.com/Yangsta911/zhonghonghvac-go/pkg/clientinterface"
 )
 
 type TCPClientHandler struct {
 	tcpTransporter
-	rtuPackager
+	// rtuPackager
 	// Todo: fix with new rtuclient here
 }
 
@@ -19,20 +17,20 @@ type tcpTransporter struct {
 	timeout time.Duration
 }
 
-func TCPClient(socket net.Conn) clientinterface.Client {
-	handler := newTCPClientHandler(socket)
-	return NewClient(handler)
-}
+// func TCPClient(socket net.Conn) clientinterface.Client {
+// 	handler := newTCPClientHandler(socket)
+// 	return NewClient(handler)
+// }
 
-func newTCPClientHandler(conn net.Conn) *TCPClientHandler {
-	return &TCPClientHandler{
-		rtuPackager: rtuPackager{},
-		tcpTransporter: tcpTransporter{
-			socket:  conn,
-			timeout: 5 * time.Second,
-		},
-	}
-}
+// func newTCPClientHandler(conn net.Conn) *TCPClientHandler {
+// 	return &TCPClientHandler{
+// 		rtuPackager: rtuPackager{},
+// 		tcpTransporter: tcpTransporter{
+// 			socket:  conn,
+// 			timeout: 5 * time.Second,
+// 		},
+// 	}
+// }
 
 func (handler *TCPClientHandler) Send(aduRequest []byte) (aduResponse []byte, err error) {
 	// set an i/o deadline on the socket (read and write)
