@@ -1,4 +1,4 @@
-package b19protocol
+package b17protocol
 
 import (
 	"io"
@@ -8,7 +8,7 @@ import (
 
 type TCPClientHandler struct {
 	tcpTransporter
-	// rtuPackager
+	rtuPackager
 	// Todo: fix with new rtuclient here
 }
 
@@ -17,14 +17,14 @@ type tcpTransporter struct {
 	timeout time.Duration
 }
 
-// func TCPClient(socket net.Conn) Client {
-// 	handler := newTCPClientHandler(socket)
-// 	// return NewClient(handler)
-// }
+func TCPClient(socket net.Conn) Clientb17 {
+	handler := newTCPClientHandler(socket)
+	return NewClient(handler)
+}
 
 func newTCPClientHandler(conn net.Conn) *TCPClientHandler {
 	return &TCPClientHandler{
-		// rtuPackager: rtuPackager{},
+		rtuPackager: rtuPackager{},
 		tcpTransporter: tcpTransporter{
 			socket:  conn,
 			timeout: 5 * time.Second,

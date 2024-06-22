@@ -1,4 +1,4 @@
-package b27protocol
+package b17protocol
 
 import (
 	"fmt"
@@ -32,7 +32,7 @@ func NewRTUClientHandler(address string) *RTUClientHandler {
 }
 
 // RTUClient creates RTU client with default handler and given connect string.
-func RTUClient(address string) Clientb27 {
+func RTUClient(address string) Clientb17 {
 	handler := NewRTUClientHandler(address)
 	return NewClient(handler)
 }
@@ -49,7 +49,7 @@ type rtuPackager struct {
 //	Data            : 0 up to 252 bytes
 //	Checksum             : 1 byte
 func (mb *rtuPackager) Encode(pdu *protocol.ProtocolDataUnit) (adu []byte, err error) {
-	length := uint16(pdu.Address[0])
+	length := len(pdu.Data) + 3
 	if length > rtuMaxSize {
 		err = fmt.Errorf("zhonghongprotocol: length of data '%v' must not be bigger than '%v'", length, rtuMaxSize)
 		return
@@ -57,9 +57,8 @@ func (mb *rtuPackager) Encode(pdu *protocol.ProtocolDataUnit) (adu []byte, err e
 	adu = make([]byte, length)
 
 	adu[0] = pdu.Header
-	adu[4] = pdu.FunctionCode
-	copy(adu[1:4], pdu.Address)
-	copy(adu[5:], pdu.Commands)
+	adu[1] = pdu.FunctionCode
+	copy(adu[1:], pdu.Data)
 
 	checksum := checksum.Checksum(adu[0 : length-1])
 
@@ -97,8 +96,8 @@ func (mb *rtuPackager) Decode(adu []byte) (pdu *protocol.ProtocolDataUnit, err e
 	// Function code & data
 	pdu = &protocol.ProtocolDataUnit{}
 	pdu.Header = adu[0]
-	pdu.FunctionCode = adu[4]
-	pdu.Data = append(adu[1:4], adu[5:length-1]...)
+	pdu.FunctionCode = adu[1]
+	pdu.Data = adu[1 : length-1]
 	return
 }
 

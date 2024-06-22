@@ -1,10 +1,10 @@
-package b27protocol
+package b29protocol
 
 import (
 	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 )
 
-type Clientb27 interface {
+type Clientb29 interface {
 	// Bit access
 	//todo change result to struct instead of byte
 	FunctionCheck(address []uint16) (results *protocol.ProtocolDataUnit, err error)

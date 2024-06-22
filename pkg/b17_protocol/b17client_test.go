@@ -1,7 +1,7 @@
 //go:build integration
 // +build integration
 
-package b19protocol_test
+package b17protocol_test
 
 import (
 	"encoding/hex"

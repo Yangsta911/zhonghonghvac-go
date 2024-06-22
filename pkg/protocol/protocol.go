@@ -8,6 +8,15 @@ const (
 	// Bit access
 	FuncCodeReadGateway        = 0xB0
 	HeadCodeReadGateway        = 0xFF
+	HeadCodeGateway            = 0xDD
+	FuncCodeGatewayOnOff       = 0x31
+	FuncCodeGatewayTemp        = 0x32
+	FuncCodeGatewayControl     = 0x33
+	FuncCodeGatewayWindSpeed   = 0x34
+	FuncCodeGatewayWindDir     = 0x71
+	FuncCodeGatewayNewAirOnOff = 0x72
+	FuncCodeGatewayNewAirMode  = 0x73
+	FuncCodeGatewayNewAirSpeed = 0x74
 	FuncCodeFunctionCheck      = 0x01
 	HeadCodeFunctionCheck      = 0xDD
 	FuncCodeStatusCheck        = 0x02

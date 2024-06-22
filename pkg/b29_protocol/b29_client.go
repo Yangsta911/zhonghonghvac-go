@@ -1,4 +1,4 @@
-package b27protocol
+package b29protocol
 
 import (
 	"encoding/binary"
@@ -19,7 +19,7 @@ type client struct {
 }
 
 // NewClient creates a new Zhonghonh client with given backend handler.
-func NewClient(handler ClientHandler) Clientb27 {
+func NewClient(handler ClientHandler) Clientb29 {
 	return &client{packager: handler, transporter: handler}
 }
 
