@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Yangsta911/zhonghonghvac-go/pkg/checksum"
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/clientinterface"
 	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 	"github.com/Yangsta911/zhonghonghvac-go/pkg/serial"
 )
@@ -32,7 +33,7 @@ func NewRTUClientHandler(address string) *RTUClientHandler {
 }
 
 // RTUClient creates RTU client with default handler and given connect string.
-func RTUClient(address string) Clientb17 {
+func RTUClient(address string) clientinterface.Client {
 	handler := NewRTUClientHandler(address)
 	return NewClient(handler)
 }

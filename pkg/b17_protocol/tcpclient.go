@@ -4,6 +4,8 @@ import (
 	"io"
 	"net"
 	"time"
+
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/clientinterface"
 )
 
 type TCPClientHandler struct {
@@ -17,7 +19,7 @@ type tcpTransporter struct {
 	timeout time.Duration
 }
 
-func TCPClient(socket net.Conn) Clientb17 {
+func TCPClient(socket net.Conn) clientinterface.Client {
 	handler := newTCPClientHandler(socket)
 	return NewClient(handler)
 }

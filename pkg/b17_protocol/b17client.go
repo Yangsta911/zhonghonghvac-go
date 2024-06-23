@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/clientinterface"
 	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 )
 
@@ -19,7 +20,7 @@ type client struct {
 }
 
 // NewClient creates a new Zhonghong client with given backend handler.
-func NewClient(handler ClientHandler) Clientb17 {
+func NewClient(handler ClientHandler) clientinterface.Client {
 	return &client{packager: handler, transporter: handler}
 }
 
@@ -54,7 +55,7 @@ func (mb *client) EditGateway(data []uint16) (results *protocol.ProtocolDataUnit
 	return resp, nil
 }
 
-func (mb *client) GatewayControlOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) On(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	newArr := PrependUint16(datalenarr, protocol.ON)
@@ -72,7 +73,7 @@ func (mb *client) GatewayControlOn(data []uint16) (results *protocol.ProtocolDat
 	return resp, nil
 }
 
-func (mb *client) GatewayControlOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	newArr := PrependUint16(datalenarr, protocol.ON)
@@ -90,7 +91,7 @@ func (mb *client) GatewayControlOff(data []uint16) (results *protocol.ProtocolDa
 	return resp, nil
 }
 
-func (mb *client) GatewayTempControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) TempControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -107,7 +108,7 @@ func (mb *client) GatewayTempControl(data []uint16) (results *protocol.ProtocolD
 	return resp, nil
 }
 
-func (mb *client) GatewayControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) Control(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -124,7 +125,7 @@ func (mb *client) GatewayControl(data []uint16) (results *protocol.ProtocolDataU
 	return resp, nil
 }
 
-func (mb *client) GatewayWindSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) WindSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -141,7 +142,7 @@ func (mb *client) GatewayWindSpeedControl(data []uint16) (results *protocol.Prot
 	return resp, nil
 }
 
-func (mb *client) GatewayWindDirControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) WindDirControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -158,7 +159,7 @@ func (mb *client) GatewayWindDirControl(data []uint16) (results *protocol.Protoc
 	return resp, nil
 }
 
-func (mb *client) GatewayNewAirOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) NewAirOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	newArr := PrependUint16(datalenarr, protocol.ON)
@@ -176,7 +177,7 @@ func (mb *client) GatewayNewAirOn(data []uint16) (results *protocol.ProtocolData
 	return resp, nil
 }
 
-func (mb *client) GatewayNewAirOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) NewAirOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	newArr := PrependUint16(datalenarr, protocol.OFF)
@@ -194,7 +195,7 @@ func (mb *client) GatewayNewAirOff(data []uint16) (results *protocol.ProtocolDat
 	return resp, nil
 }
 
-func (mb *client) GatewayNewAirModeControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) NewAirModeControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -211,7 +212,7 @@ func (mb *client) GatewayNewAirModeControl(data []uint16) (results *protocol.Pro
 	return resp, nil
 }
 
-func (mb *client) GatewayNewAirSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) NewAirSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -226,6 +227,22 @@ func (mb *client) GatewayNewAirSpeedControl(data []uint16) (results *protocol.Pr
 	}
 
 	return resp, nil
+}
+
+func (mb *client) ErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
+}
+
+func (mb *client) FunctionCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
+}
+
+func (mb *client) NewAirErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
+}
+
+func (mb *client) StatusCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
 }
 
 func (mb *client) send(request *protocol.ProtocolDataUnit) (response *protocol.ProtocolDataUnit, err error) {
@@ -251,7 +268,7 @@ func (mb *client) send(request *protocol.ProtocolDataUnit) (response *protocol.P
 	}
 	if response.Data == nil || len(response.Data) == 0 {
 		// Empty response
-		err = fmt.Errorf("Zhonghong: response data is empty")
+		err = fmt.Errorf("zhonghong: response data is empty")
 		return
 	}
 	return

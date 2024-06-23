@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/clientinterface"
 	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 )
 
@@ -19,13 +20,13 @@ type client struct {
 }
 
 // NewClient creates a new Zhonghonh client with given backend handler.
-func NewClient(handler ClientHandler) Clientb29 {
+func NewClient(handler ClientHandler) clientinterface.Client {
 	return &client{packager: handler, transporter: handler}
 }
 
-func (mb *client) FunctionCheck(address []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(address) + 4)
-	newArr := PrependUint16(address, len_data)
+func (mb *client) FunctionCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	len_data := uint16(len(data) + 4)
+	newArr := PrependUint16(data, len_data)
 	addressLen := dataBlockArray(newArr)
 	request := protocol.ProtocolDataUnit{
 		Header:       protocol.HeadCodeFunctionCheck,
@@ -41,9 +42,9 @@ func (mb *client) FunctionCheck(address []uint16) (results *protocol.ProtocolDat
 	return resp, nil
 }
 
-func (mb *client) StatusCheck(address []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(address) + 4)
-	newArr := PrependUint16(address, len_data)
+func (mb *client) StatusCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	len_data := uint16(len(data) + 4)
+	newArr := PrependUint16(data, len_data)
 	addressLen := dataBlockArray(newArr)
 	request := protocol.ProtocolDataUnit{
 		Header:       protocol.HeadCodeStatusCheck,
@@ -59,16 +60,17 @@ func (mb *client) StatusCheck(address []uint16) (results *protocol.ProtocolDataU
 	return resp, nil
 }
 
-func (mb *client) ControlOn(address []uint16, commands []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) On(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	address := data[:2]
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
+	commands := data[2:]
 	newArr = PrependUint16(commands, protocol.ON)
 	commandsOn := dataBlockArray(newArr)
 	request := protocol.ProtocolDataUnit{
 		Header:       protocol.HeadCodeOnOff,
 		FunctionCode: protocol.FuncCodeOnOff,
-		CommandType:  "remote",
 		Address:      addressLen,
 		Commands:     commandsOn,
 	}
@@ -80,16 +82,17 @@ func (mb *client) ControlOn(address []uint16, commands []uint16) (results *proto
 	return resp, nil
 }
 
-func (mb *client) ControlOff(address []uint16, commands []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	address := data[:2]
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
+	commands := data[2:]
 	newArr = PrependUint16(commands, protocol.OFF)
 	commandsOff := dataBlockArray(newArr)
 	request := protocol.ProtocolDataUnit{
 		Header:       protocol.HeadCodeOnOff,
 		FunctionCode: protocol.FuncCodeOnOff,
-		CommandType:  "remote",
 		Address:      addressLen,
 		Commands:     commandsOff,
 	}
@@ -101,14 +104,13 @@ func (mb *client) ControlOff(address []uint16, commands []uint16) (results *prot
 	return resp, nil
 }
 
-func (mb *client) ErrorCheck(address []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(address) + 4)
-	newArr := PrependUint16(address, len_data)
+func (mb *client) ErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	len_data := uint16(len(data) + 4)
+	newArr := PrependUint16(data, len_data)
 	addressLen := dataBlockArray(newArr)
 	request := protocol.ProtocolDataUnit{
 		Header:       protocol.HeadCodeErrorCheck,
 		FunctionCode: protocol.FuncCodeErrorCheck,
-		CommandType:  "remote",
 		Address:      addressLen,
 	}
 	resp, err := mb.send(&request)
@@ -119,14 +121,13 @@ func (mb *client) ErrorCheck(address []uint16) (results *protocol.ProtocolDataUn
 	return resp, nil
 }
 
-func (mb *client) FreshAirCheck(address []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(address) + 4)
-	newArr := PrependUint16(address, len_data)
+func (mb *client) FreshAirCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	len_data := uint16(len(data) + 4)
+	newArr := PrependUint16(data, len_data)
 	addressLen := dataBlockArray(newArr)
 	request := protocol.ProtocolDataUnit{
 		Header:       protocol.HeadCodeFreshAirCheck,
 		FunctionCode: protocol.FuncCodeFreshAirCheck,
-		CommandType:  "remote",
 		Address:      addressLen,
 	}
 	resp, err := mb.send(&request)
@@ -137,16 +138,17 @@ func (mb *client) FreshAirCheck(address []uint16) (results *protocol.ProtocolDat
 	return resp, nil
 }
 
-func (mb *client) FreshAirControlOn(address []uint16, commands []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) NewAirModeControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	address := data[:2]
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
+	commands := data[2:]
 	addressLen := dataBlockArray(newArr)
 	newArr = PrependUint16(commands, protocol.ON)
 	commandsOn := dataBlockArray(newArr)
 	request := protocol.ProtocolDataUnit{
 		Header:       protocol.HeadCodeOnOff,
 		FunctionCode: protocol.FuncCodeOnOff,
-		CommandType:  "remote",
 		Address:      addressLen,
 		Commands:     commandsOn,
 	}
@@ -158,16 +160,17 @@ func (mb *client) FreshAirControlOn(address []uint16, commands []uint16) (result
 	return resp, nil
 }
 
-func (mb *client) FreshAirControlOff(address []uint16, commands []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) NewAirOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	address := data[:2]
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
 	addressLen := dataBlockArray(newArr)
-	newArr = PrependUint16(commands, protocol.OFF)
+	commands := data[2:]
+	newArr = PrependUint16(commands, protocol.ON)
 	commandsOff := dataBlockArray(newArr)
 	request := protocol.ProtocolDataUnit{
 		Header:       protocol.HeadCodeOnOff,
 		FunctionCode: protocol.FuncCodeOnOff,
-		CommandType:  "remote",
 		Address:      addressLen,
 		Commands:     commandsOff,
 	}
@@ -179,14 +182,35 @@ func (mb *client) FreshAirControlOff(address []uint16, commands []uint16) (resul
 	return resp, nil
 }
 
-func (mb *client) FreshAirErrorCheck(address []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *client) NewAirOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	address := data[:2]
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
+	addressLen := dataBlockArray(newArr)
+	commands := data[2:]
+	newArr = PrependUint16(commands, protocol.OFF)
+	commandsOff := dataBlockArray(newArr)
+	request := protocol.ProtocolDataUnit{
+		Header:       protocol.HeadCodeOnOff,
+		FunctionCode: protocol.FuncCodeOnOff,
+		Address:      addressLen,
+		Commands:     commandsOff,
+	}
+	resp, err := mb.send(&request)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func (mb *client) NewAirErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	len_data := uint16(len(data) + 4)
+	newArr := PrependUint16(data, len_data)
 	addressLen := dataBlockArray(newArr)
 	request := protocol.ProtocolDataUnit{
 		Header:       protocol.HeadCodeFreshAirErrorCheck,
 		FunctionCode: protocol.FuncCodeFreshAirErrorCheck,
-		CommandType:  "remote",
 		Address:      addressLen,
 	}
 	resp, err := mb.send(&request)
@@ -195,6 +219,34 @@ func (mb *client) FreshAirErrorCheck(address []uint16) (results *protocol.Protoc
 	}
 
 	return resp, nil
+}
+
+func (mb *client) Control(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+}
+
+func (mb *client) EditGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+}
+
+func (mb *client) NewAirSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+}
+
+func (mb *client) ReadGateway() (results *protocol.ProtocolDataUnit, err error) {
+	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+}
+
+func (mb *client) TempControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+}
+
+func (mb *client) WindDirControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+}
+
+func (mb *client) WindSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
 }
 
 func (mb *client) send(request *protocol.ProtocolDataUnit) (response *protocol.ProtocolDataUnit, err error) {
@@ -220,7 +272,7 @@ func (mb *client) send(request *protocol.ProtocolDataUnit) (response *protocol.P
 	}
 	if response.Data == nil || len(response.Data) == 0 {
 		// Empty response
-		err = fmt.Errorf("Zhonghong: response data is empty")
+		err = fmt.Errorf("zhonghong: response data is empty")
 		return
 	}
 	return
