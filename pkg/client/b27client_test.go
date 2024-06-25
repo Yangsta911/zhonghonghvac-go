@@ -1,4 +1,4 @@
-package b29protocol_test
+package client_test
 
 // func TestRTUEncoding(t *testing.T) {
 // 	encoder := rtuPackager{}
