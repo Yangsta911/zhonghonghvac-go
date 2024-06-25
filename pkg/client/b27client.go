@@ -1,10 +1,9 @@
-package b29protocol
+package client
 
 import (
-	"encoding/binary"
 	"fmt"
 
-	"github.com/Yangsta911/zhonghonghvac-go/pkg/clientinterface"
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/api"
 	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 )
 
@@ -14,17 +13,18 @@ type ClientHandler interface {
 	protocol.Transporter
 }
 
-type client struct {
+// 中弘线控器 B27（小超人）
+type b27client struct {
 	packager    protocol.Packager
 	transporter protocol.Transporter
 }
 
-// NewClient creates a new Zhonghonh client with given backend handler.
-func NewClient(handler ClientHandler) clientinterface.Client {
-	return &client{packager: handler, transporter: handler}
+// NewB27Client creates a new Zhonghonh client with given backend handler.
+func NewB27Client(handler ClientHandler) api.Client {
+	return &b27client{packager: handler, transporter: handler}
 }
 
-func (mb *client) FunctionCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) FunctionCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	newArr := PrependUint16(data, len_data)
 	addressLen := dataBlockArray(newArr)
@@ -42,7 +42,7 @@ func (mb *client) FunctionCheck(data []uint16) (results *protocol.ProtocolDataUn
 	return resp, nil
 }
 
-func (mb *client) StatusCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) StatusCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	newArr := PrependUint16(data, len_data)
 	addressLen := dataBlockArray(newArr)
@@ -60,7 +60,7 @@ func (mb *client) StatusCheck(data []uint16) (results *protocol.ProtocolDataUnit
 	return resp, nil
 }
 
-func (mb *client) On(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) On(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	address := data[:2]
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
@@ -82,7 +82,7 @@ func (mb *client) On(data []uint16) (results *protocol.ProtocolDataUnit, err err
 	return resp, nil
 }
 
-func (mb *client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	address := data[:2]
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
@@ -104,7 +104,7 @@ func (mb *client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err er
 	return resp, nil
 }
 
-func (mb *client) ErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) ErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	newArr := PrependUint16(data, len_data)
 	addressLen := dataBlockArray(newArr)
@@ -121,7 +121,7 @@ func (mb *client) ErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit,
 	return resp, nil
 }
 
-func (mb *client) FreshAirCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) FreshAirCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	newArr := PrependUint16(data, len_data)
 	addressLen := dataBlockArray(newArr)
@@ -138,7 +138,7 @@ func (mb *client) FreshAirCheck(data []uint16) (results *protocol.ProtocolDataUn
 	return resp, nil
 }
 
-func (mb *client) NewAirModeControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) NewAirModeControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	address := data[:2]
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
@@ -160,7 +160,7 @@ func (mb *client) NewAirModeControl(data []uint16) (results *protocol.ProtocolDa
 	return resp, nil
 }
 
-func (mb *client) NewAirOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) NewAirOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	address := data[:2]
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
@@ -182,7 +182,7 @@ func (mb *client) NewAirOn(data []uint16) (results *protocol.ProtocolDataUnit, e
 	return resp, nil
 }
 
-func (mb *client) NewAirOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) NewAirOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	address := data[:2]
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
@@ -204,7 +204,7 @@ func (mb *client) NewAirOff(data []uint16) (results *protocol.ProtocolDataUnit, 
 	return resp, nil
 }
 
-func (mb *client) NewAirErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) NewAirErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	newArr := PrependUint16(data, len_data)
 	addressLen := dataBlockArray(newArr)
@@ -221,35 +221,35 @@ func (mb *client) NewAirErrorCheck(data []uint16) (results *protocol.ProtocolDat
 	return resp, nil
 }
 
-func (mb *client) Control(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) Control(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
 }
 
-func (mb *client) EditGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) EditGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
 }
 
-func (mb *client) NewAirSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) NewAirSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
 }
 
-func (mb *client) ReadGateway() (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) ReadGateway() (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
 }
 
-func (mb *client) TempControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) TempControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
 }
 
-func (mb *client) WindDirControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) WindDirControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
 }
 
-func (mb *client) WindSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) WindSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
 }
 
-func (mb *client) send(request *protocol.ProtocolDataUnit) (response *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) send(request *protocol.ProtocolDataUnit) (response *protocol.ProtocolDataUnit, err error) {
 	aduRequest, err := mb.packager.Encode(request)
 	if err != nil {
 		return
@@ -276,34 +276,4 @@ func (mb *client) send(request *protocol.ProtocolDataUnit) (response *protocol.P
 		return
 	}
 	return
-}
-
-func dataBlock(value ...uint16) []byte {
-	data := make([]byte, 2*len(value))
-	for i, v := range value {
-		binary.BigEndian.PutUint16(data[i*2:], v)
-	}
-	return data
-}
-
-func dataBlockArray(arr []uint16) []byte {
-	byteSlice := make([]byte, len(arr)*2)
-	for i, v := range arr {
-		binary.BigEndian.PutUint16(byteSlice[i*2:], v)
-	}
-
-	return byteSlice
-}
-
-func PrependUint16(slice []uint16, element uint16) []uint16 {
-	newSlice := append([]uint16{element}, slice...)
-	return newSlice
-}
-
-func responseError(response *protocol.ProtocolDataUnit) error {
-	mbError := &protocol.ZhonghongError{FunctionCode: response.FunctionCode}
-	if response.Data != nil && len(response.Data) > 0 {
-		mbError.ExceptionCode = response.Data[0]
-	}
-	return mbError
 }

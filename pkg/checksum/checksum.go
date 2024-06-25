@@ -1,9 +1,9 @@
 package checksum
 
-func Checksum(data []byte) int {
-	sum := 0
+func CalculateByteSum(data []byte) uint8 {
+	var sum int64
 	for _, b := range data {
-		sum = sum + int(b)
+		sum = sum + int64(b)
 	}
-	return sum % 256
+	return uint8(sum % 256)
 }

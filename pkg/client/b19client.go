@@ -1,30 +1,24 @@
-package b17protocol
+package client
 
 import (
-	"encoding/binary"
 	"fmt"
 
-	"github.com/Yangsta911/zhonghonghvac-go/pkg/clientinterface"
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/api"
 	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 )
 
-// ClientHandler is the interface that groups the Packager and Transporter methods.
-type ClientHandler interface {
-	protocol.Packager
-	protocol.Transporter
-}
-
-type client struct {
+// 中弘 VRF 集控器 B19
+type b19client struct {
 	packager    protocol.Packager
 	transporter protocol.Transporter
 }
 
 // NewClient creates a new Zhonghong client with given backend handler.
-func NewClient(handler ClientHandler) clientinterface.Client {
-	return &client{packager: handler, transporter: handler}
+func NewB19Client(handler api.ClientHandler) api.Client {
+	return &b19client{packager: handler, transporter: handler}
 }
 
-func (mb *client) ReadGateway() (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) ReadGateway() (results *protocol.ProtocolDataUnit, err error) {
 	request := protocol.ProtocolDataUnit{
 		Header:       protocol.HeadCodeReadGateway,
 		FunctionCode: protocol.FuncCodeReadGateway,
@@ -38,7 +32,7 @@ func (mb *client) ReadGateway() (results *protocol.ProtocolDataUnit, err error) 
 	return resp, nil
 }
 
-func (mb *client) EditGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) EditGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	slice := []uint16{0, 0}
 	newdata := append(slice, data...)
 	senddata := dataBlockArray(newdata)
@@ -55,7 +49,7 @@ func (mb *client) EditGateway(data []uint16) (results *protocol.ProtocolDataUnit
 	return resp, nil
 }
 
-func (mb *client) On(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) On(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	newArr := PrependUint16(datalenarr, protocol.ON)
@@ -73,7 +67,7 @@ func (mb *client) On(data []uint16) (results *protocol.ProtocolDataUnit, err err
 	return resp, nil
 }
 
-func (mb *client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	newArr := PrependUint16(datalenarr, protocol.ON)
@@ -91,7 +85,7 @@ func (mb *client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err er
 	return resp, nil
 }
 
-func (mb *client) TempControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) TempControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -108,7 +102,7 @@ func (mb *client) TempControl(data []uint16) (results *protocol.ProtocolDataUnit
 	return resp, nil
 }
 
-func (mb *client) Control(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) Control(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -125,7 +119,7 @@ func (mb *client) Control(data []uint16) (results *protocol.ProtocolDataUnit, er
 	return resp, nil
 }
 
-func (mb *client) WindSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) WindSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -142,7 +136,7 @@ func (mb *client) WindSpeedControl(data []uint16) (results *protocol.ProtocolDat
 	return resp, nil
 }
 
-func (mb *client) WindDirControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) WindDirControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -159,7 +153,7 @@ func (mb *client) WindDirControl(data []uint16) (results *protocol.ProtocolDataU
 	return resp, nil
 }
 
-func (mb *client) NewAirOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) NewAirOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	newArr := PrependUint16(datalenarr, protocol.ON)
@@ -177,7 +171,7 @@ func (mb *client) NewAirOn(data []uint16) (results *protocol.ProtocolDataUnit, e
 	return resp, nil
 }
 
-func (mb *client) NewAirOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) NewAirOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	newArr := PrependUint16(datalenarr, protocol.OFF)
@@ -195,7 +189,7 @@ func (mb *client) NewAirOff(data []uint16) (results *protocol.ProtocolDataUnit, 
 	return resp, nil
 }
 
-func (mb *client) NewAirModeControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) NewAirModeControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -212,7 +206,7 @@ func (mb *client) NewAirModeControl(data []uint16) (results *protocol.ProtocolDa
 	return resp, nil
 }
 
-func (mb *client) NewAirSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) NewAirSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	len_data := uint16(len(data) + 4)
 	datalenarr := PrependUint16(data, len_data)
 	senddata := dataBlockArray(datalenarr)
@@ -229,23 +223,23 @@ func (mb *client) NewAirSpeedControl(data []uint16) (results *protocol.ProtocolD
 	return resp, nil
 }
 
-func (mb *client) ErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) ErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
 }
 
-func (mb *client) FunctionCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) FunctionCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
 }
 
-func (mb *client) NewAirErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) NewAirErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
 }
 
-func (mb *client) StatusCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) StatusCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
 }
 
-func (mb *client) send(request *protocol.ProtocolDataUnit) (response *protocol.ProtocolDataUnit, err error) {
+func (mb *b19client) send(request *protocol.ProtocolDataUnit) (response *protocol.ProtocolDataUnit, err error) {
 	aduRequest, err := mb.packager.Encode(request)
 	if err != nil {
 		return
@@ -272,26 +266,4 @@ func (mb *client) send(request *protocol.ProtocolDataUnit) (response *protocol.P
 		return
 	}
 	return
-}
-
-func responseError(response *protocol.ProtocolDataUnit) error {
-	mbError := &protocol.ZhonghongError{FunctionCode: response.FunctionCode}
-	if response.Data != nil && len(response.Data) > 0 {
-		mbError.ExceptionCode = response.Data[0]
-	}
-	return mbError
-}
-
-func dataBlockArray(arr []uint16) []byte {
-	byteSlice := make([]byte, len(arr)*2)
-	for i, v := range arr {
-		binary.BigEndian.PutUint16(byteSlice[i*2:], v)
-	}
-
-	return byteSlice
-}
-
-func PrependUint16(slice []uint16, element uint16) []uint16 {
-	newSlice := append([]uint16{element}, slice...)
-	return newSlice
 }

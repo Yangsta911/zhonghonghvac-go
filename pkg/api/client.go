@@ -1,4 +1,4 @@
-package clientinterface
+package api
 
 import "github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 
