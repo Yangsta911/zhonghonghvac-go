@@ -3,7 +3,7 @@ package clienthandler
 import (
 	"fmt"
 
-	"github.com/Yangsta911/zhonghonghvac-go/pkg/checksum"
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/client"
 	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 )
 
@@ -31,7 +31,7 @@ func (mb *RTUPackager) Encode(pdu *protocol.ProtocolDataUnit) (adu []byte, err e
 	adu[1] = pdu.FunctionCode
 	copy(adu[2:], pdu.Data)
 
-	checksum := checksum.CalculateByteSum(adu[0 : length-1])
+	checksum := client.CalculateByteSum(adu[0 : length-1])
 
 	adu[length-1] = byte(checksum)
 	return
@@ -57,7 +57,7 @@ func (mb *RTUPackager) Verify(aduRequest []byte, aduResponse []byte) (err error)
 func (mb *RTUPackager) Decode(adu []byte) (pdu *protocol.ProtocolDataUnit, err error) {
 	length := len(adu)
 	receivedChecksum := uint8(adu[len(adu)-1])
-	computedChecksum := checksum.CalculateByteSum(adu[0 : len(adu)-1])
+	computedChecksum := client.CalculateByteSum(adu[0 : len(adu)-1])
 
 	if computedChecksum != receivedChecksum {
 		err = fmt.Errorf("zonghongprotocol: response checksum '%v' does not match expected '%v'", receivedChecksum, computedChecksum)

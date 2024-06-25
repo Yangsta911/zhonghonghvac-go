@@ -224,19 +224,19 @@ func (mb *b19client) NewAirSpeedControl(data []uint16) (results *protocol.Protoc
 }
 
 func (mb *b19client) ErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
+	return nil, fmt.Errorf("zhonghong: b19 does not support following protocol")
 }
 
 func (mb *b19client) FunctionCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
+	return nil, fmt.Errorf("zhonghong: b19 does not support following protocol")
 }
 
 func (mb *b19client) NewAirErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
+	return nil, fmt.Errorf("zhonghong: b19 does not support following protocol")
 }
 
 func (mb *b19client) StatusCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	return nil, fmt.Errorf("zhonghong: b17 does not support following protocol")
+	return nil, fmt.Errorf("zhonghong: b19 does not support following protocol")
 }
 
 func (mb *b19client) send(request *protocol.ProtocolDataUnit) (response *protocol.ProtocolDataUnit, err error) {

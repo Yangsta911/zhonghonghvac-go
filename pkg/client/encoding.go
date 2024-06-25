@@ -6,6 +6,14 @@ import (
 	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 )
 
+func CalculateByteSum(data []byte) uint8 {
+	var sum int64
+	for _, b := range data {
+		sum = sum + int64(b)
+	}
+	return uint8(sum % 256)
+}
+
 func dataBlock(value ...uint16) []byte {
 	data := make([]byte, 2*len(value))
 	for i, v := range value {

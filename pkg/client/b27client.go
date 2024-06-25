@@ -222,31 +222,31 @@ func (mb *b27client) NewAirErrorCheck(data []uint16) (results *protocol.Protocol
 }
 
 func (mb *b27client) Control(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+	return nil, fmt.Errorf("zhonghong: b27 does not support following protocol")
 }
 
 func (mb *b27client) EditGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+	return nil, fmt.Errorf("zhonghong: b27 does not support following protocol")
 }
 
 func (mb *b27client) NewAirSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+	return nil, fmt.Errorf("zhonghong: b27 does not support following protocol")
 }
 
 func (mb *b27client) ReadGateway() (results *protocol.ProtocolDataUnit, err error) {
-	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+	return nil, fmt.Errorf("zhonghong: b27 does not support following protocol")
 }
 
 func (mb *b27client) TempControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+	return nil, fmt.Errorf("zhonghong: b27 does not support following protocol")
 }
 
 func (mb *b27client) WindDirControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+	return nil, fmt.Errorf("zhonghong: b27 does not support following protocol")
 }
 
 func (mb *b27client) WindSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	return nil, fmt.Errorf("zhonghong: b29 does not support following protocol")
+	return nil, fmt.Errorf("zhonghong: b27 does not support following protocol")
 }
 
 func (mb *b27client) send(request *protocol.ProtocolDataUnit) (response *protocol.ProtocolDataUnit, err error) {
