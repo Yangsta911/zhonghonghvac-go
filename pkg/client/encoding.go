@@ -2,10 +2,9 @@ package client
 
 import (
 	"encoding/binary"
-
-	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 )
 
+// CalculateByteSum calculates the sum of a byte slice and returns the least significant byte.
 func CalculateByteSum(data []byte) uint8 {
 	var sum int64
 	for _, b := range data {
@@ -14,14 +13,7 @@ func CalculateByteSum(data []byte) uint8 {
 	return uint8(sum % 256)
 }
 
-func dataBlock(value ...uint16) []byte {
-	data := make([]byte, 2*len(value))
-	for i, v := range value {
-		binary.BigEndian.PutUint16(data[i*2:], v)
-	}
-	return data
-}
-
+// dataBlockArray returns a byteSlice given a uint16 slice.
 func dataBlockArray(arr []uint16) []byte {
 	byteSlice := make([]byte, len(arr)*2)
 	for i, v := range arr {
@@ -31,15 +23,8 @@ func dataBlockArray(arr []uint16) []byte {
 	return byteSlice
 }
 
+// PrependUint16 prepends a uint16 number to a uint16 slice.
 func PrependUint16(slice []uint16, element uint16) []uint16 {
 	newSlice := append([]uint16{element}, slice...)
 	return newSlice
-}
-
-func responseError(response *protocol.ProtocolDataUnit) error {
-	mbError := &protocol.ZhonghongError{FunctionCode: response.FunctionCode}
-	if response.Data != nil && len(response.Data) > 0 {
-		mbError.ExceptionCode = response.Data[0]
-	}
-	return mbError
 }

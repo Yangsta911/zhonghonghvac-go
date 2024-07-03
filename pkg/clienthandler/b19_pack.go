@@ -12,12 +12,12 @@ type B19Packager struct {
 	// SlaveId byte
 }
 
-// Encode encodes PDU in a RTU frame:
+// Encode encodes PDU into a Modbus frame:
 //
-//	Header   : 1 byte
+//	Header   		: 1 byte
 //	Function        : 1 byte
 //	Data            : 0 up to 252 bytes
-//	CRC             : 2 byte
+//	Checksum        : 1 byte
 func (mb *B19Packager) Encode(pdu *protocol.ProtocolDataUnit) (adu []byte, err error) {
 	// todo check header to find length
 	length := len(pdu.Data) + 3
@@ -37,23 +37,7 @@ func (mb *B19Packager) Encode(pdu *protocol.ProtocolDataUnit) (adu []byte, err e
 	return
 }
 
-// Verify verifies response length and slave id.
-func (mb *B19Packager) Verify(aduRequest []byte, aduResponse []byte) (err error) {
-	length := len(aduResponse)
-	// Minimum size (including address, function and CRC)
-	if length < rtuMinSize {
-		err = fmt.Errorf("zonghongprotocol: response length '%v' does not meet minimum '%v'", length, rtuMinSize)
-		return
-	}
-	// Slave address must match
-	if aduResponse[0] != aduRequest[0] {
-		err = fmt.Errorf("zonghongprotocol: response slave id '%v' does not match request '%v'", aduResponse[0], aduRequest[0])
-		return
-	}
-	return
-}
-
-// Decode extracts PDU from RTU frame and verify CRC.
+// Decode extracts PDU from RTU frame and verify Checksum.
 func (mb *B19Packager) Decode(adu []byte) (pdu *protocol.ProtocolDataUnit, err error) {
 	length := len(adu)
 	receivedChecksum := uint8(adu[len(adu)-1])
@@ -68,5 +52,26 @@ func (mb *B19Packager) Decode(adu []byte) (pdu *protocol.ProtocolDataUnit, err e
 	pdu.Header = adu[0]
 	pdu.FunctionCode = adu[1]
 	pdu.Data = adu[2 : length-1]
+	return
+}
+
+// Verify verifies response length and header and function  code.
+func (mb *B19Packager) Verify(aduRequest []byte, aduResponse []byte) (err error) {
+	length := len(aduResponse)
+	// Minimum size (including address, function and CRC)
+	if length < rtuMinSize {
+		err = fmt.Errorf("zonghongprotocol: response length '%v' does not meet minimum '%v'", length, rtuMinSize)
+		return
+	}
+	// Header must match
+	if aduResponse[0] != aduRequest[0] {
+		err = fmt.Errorf("zonghongprotocol: response header '%v' does not match request '%v'", aduResponse[0], aduRequest[0])
+		return
+	}
+	// Function code must match
+	if aduResponse[1] != aduRequest[1] {
+		err = fmt.Errorf("zonghongprotocol: response function '%v' does not match request '%v'", aduResponse[1], aduRequest[1])
+		return
+	}
 	return
 }
