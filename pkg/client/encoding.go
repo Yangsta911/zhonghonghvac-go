@@ -28,17 +28,3 @@ func PrependUint16(slice []uint16, element uint16) []uint16 {
 	newSlice := append([]uint16{element}, slice...)
 	return newSlice
 }
-
-func AddLen(slice []uint16) []byte {
-	address := slice[:2]
-	len_data := uint16(len(address) + 4)
-	LenArr := dataBlockArray(PrependUint16(slice, len_data))
-	return LenArr
-}
-
-func AppendCommands(slice []uint16, element uint16) []byte {
-	commands := slice[2:]
-	newArr := PrependUint16(commands, element)
-	commandsArr := dataBlockArray(newArr)
-	return commandsArr
-}
