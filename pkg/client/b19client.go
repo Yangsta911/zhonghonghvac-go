@@ -19,12 +19,8 @@ func NewB19Client(handler api.ClientHandler) api.Client {
 }
 
 // ReadGateway returns data related to the gateway
-func (mb *b19client) ReadGateway() (results *protocol.ProtocolDataUnit, err error) {
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeReadGateway,
-		FunctionCode: protocol.FuncCodeReadGateway,
-		Data:         []byte{0x00, 0x00, 0x00, 0x00},
-	}
+func (mb *b19client) ReadGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+	request := NormalEncode(data, protocol.FuncCodeReadGateway)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -35,14 +31,7 @@ func (mb *b19client) ReadGateway() (results *protocol.ProtocolDataUnit, err erro
 
 // EditGateway edits the data related to the gateway
 func (mb *b19client) EditGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	slice := []uint16{0, 0}
-	newdata := append(slice, data...)
-	senddata := dataBlockArray(newdata)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeReadGateway,
-		FunctionCode: protocol.FuncCodeEditGateway,
-		Data:         senddata,
-	}
+	request := NormalEncode(data, protocol.FuncCodeEditGateway)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -53,15 +42,7 @@ func (mb *b19client) EditGateway(data []uint16) (results *protocol.ProtocolDataU
 
 // On sends the ON command for HVAC to gateway
 func (mb *b19client) On(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	newArr := PrependUint16(datalenarr, protocol.ON)
-	senddata := dataBlockArray(newArr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayOnOff,
-		Data:         senddata,
-	}
+	request := OnOffEncode(data, protocol.FuncCodeGatewayOnOff, protocol.ON)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -72,15 +53,7 @@ func (mb *b19client) On(data []uint16) (results *protocol.ProtocolDataUnit, err 
 
 // Off sends the OFF command for HVAC to gateway
 func (mb *b19client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	newArr := PrependUint16(datalenarr, protocol.ON)
-	senddata := dataBlockArray(newArr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayOnOff,
-		Data:         senddata,
-	}
+	request := OnOffEncode(data, protocol.FuncCodeGatewayOnOff, protocol.OFF)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -91,14 +64,7 @@ func (mb *b19client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err
 
 // TempControl sends the temperature control command for HVAC to gateway
 func (mb *b19client) TempControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	senddata := dataBlockArray(datalenarr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayOnOff,
-		Data:         senddata,
-	}
+	request := NormalEncode(data, protocol.FuncCodeGatewayTemp)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -109,14 +75,7 @@ func (mb *b19client) TempControl(data []uint16) (results *protocol.ProtocolDataU
 
 // Control sends the control mode command for HVAC to gateway
 func (mb *b19client) Control(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	senddata := dataBlockArray(datalenarr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayControl,
-		Data:         senddata,
-	}
+	request := NormalEncode(data, protocol.FuncCodeGatewayControl)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -127,14 +86,7 @@ func (mb *b19client) Control(data []uint16) (results *protocol.ProtocolDataUnit,
 
 // WindSpeedControl sends the wind speed control command for HVAC to gateway
 func (mb *b19client) WindSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	senddata := dataBlockArray(datalenarr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayWindSpeed,
-		Data:         senddata,
-	}
+	request := NormalEncode(data, protocol.FuncCodeGatewayWindSpeed)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -145,14 +97,7 @@ func (mb *b19client) WindSpeedControl(data []uint16) (results *protocol.Protocol
 
 // WindDirControl sends the wind direction control command for HVAC to gateway
 func (mb *b19client) WindDirControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	senddata := dataBlockArray(datalenarr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayWindDir,
-		Data:         senddata,
-	}
+	request := NormalEncode(data, protocol.FuncCodeGatewayWindDir)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -163,15 +108,7 @@ func (mb *b19client) WindDirControl(data []uint16) (results *protocol.ProtocolDa
 
 // FreshAirOn sends the ON command for Fresh Air ventilation unit to gateway
 func (mb *b19client) FreshAirOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	newArr := PrependUint16(datalenarr, protocol.ON)
-	senddata := dataBlockArray(newArr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayNewAirOnOff,
-		Data:         senddata,
-	}
+	request := OnOffEncode(data, protocol.FuncCodeGatewayNewAirOnOff, protocol.ON)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -182,15 +119,7 @@ func (mb *b19client) FreshAirOn(data []uint16) (results *protocol.ProtocolDataUn
 
 // FreshAirOff sends the OFF command for Fresh Air ventilation unit to gateway
 func (mb *b19client) FreshAirOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	newArr := PrependUint16(datalenarr, protocol.OFF)
-	senddata := dataBlockArray(newArr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayNewAirOnOff,
-		Data:         senddata,
-	}
+	request := OnOffEncode(data, protocol.FuncCodeGatewayNewAirOnOff, protocol.OFF)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -201,14 +130,7 @@ func (mb *b19client) FreshAirOff(data []uint16) (results *protocol.ProtocolDataU
 
 // FreshAirModeControl sends the mode control command for Fresh Air ventilation unit to gateway
 func (mb *b19client) FreshAirModeControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	senddata := dataBlockArray(datalenarr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayNewAirMode,
-		Data:         senddata,
-	}
+	request := NormalEncode(data, protocol.FuncCodeGatewayNewAirMode)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -219,14 +141,7 @@ func (mb *b19client) FreshAirModeControl(data []uint16) (results *protocol.Proto
 
 // FreshAirSpeedControl sends the speed control command for Fresh Air ventilation unit to gateway
 func (mb *b19client) FreshAirSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	senddata := dataBlockArray(datalenarr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayNewAirSpeed,
-		Data:         senddata,
-	}
+	request := NormalEncode(data, protocol.FuncCodeGatewayNewAirSpeed)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -237,15 +152,7 @@ func (mb *b19client) FreshAirSpeedControl(data []uint16) (results *protocol.Prot
 
 // FloorHeatingOn sends the ON command for Floor Heating unit to gateway
 func (mb *b19client) FloorHeatingOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	newArr := PrependUint16(datalenarr, protocol.ON)
-	senddata := dataBlockArray(newArr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.FuncCodeGatewayFloorHeatingOnOff,
-		FunctionCode: protocol.FuncCodeGatewayFloorHeatingOnOff,
-		Data:         senddata,
-	}
+	request := OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingOnOff, protocol.ON)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -256,15 +163,7 @@ func (mb *b19client) FloorHeatingOn(data []uint16) (results *protocol.ProtocolDa
 
 // FloorHeatingOff sends the OFF command for Floor Heating unit to gateway
 func (mb *b19client) FloorHeatingOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	newArr := PrependUint16(datalenarr, protocol.OFF)
-	senddata := dataBlockArray(newArr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.FuncCodeGatewayFloorHeatingOnOff,
-		FunctionCode: protocol.FuncCodeGatewayFloorHeatingOnOff,
-		Data:         senddata,
-	}
+	request := OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingOnOff, protocol.OFF)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -275,14 +174,7 @@ func (mb *b19client) FloorHeatingOff(data []uint16) (results *protocol.ProtocolD
 
 // FloorHeatingTemp sends the temperature control command for Floor Heating unit to gateway
 func (mb *b19client) FloorHeatingTemp(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	senddata := dataBlockArray(datalenarr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayFloorHeatingTemp,
-		Data:         senddata,
-	}
+	request := NormalEncode(data, protocol.FuncCodeGatewayFloorHeatingTemp)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -293,14 +185,7 @@ func (mb *b19client) FloorHeatingTemp(data []uint16) (results *protocol.Protocol
 
 // FloorHeatingControl sends the control command for Floor Heating unit to gateway
 func (mb *b19client) FloorHeatingControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	senddata := dataBlockArray(datalenarr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayFloorHeatingControl,
-		Data:         senddata,
-	}
+	request := NormalEncode(data, protocol.FuncCodeGatewayFloorHeatingControl)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -311,15 +196,7 @@ func (mb *b19client) FloorHeatingControl(data []uint16) (results *protocol.Proto
 
 // FloorHeatingAntiFreezeOn sends the ON command for Floor Heating unit AntiFreeze function to gateway
 func (mb *b19client) FloorHeatingAntiFreezeOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	newArr := PrependUint16(datalenarr, protocol.OFF)
-	senddata := dataBlockArray(newArr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayFloorHeatingAntiFreezeOnOff,
-		Data:         senddata,
-	}
+	request := OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingAntiFreezeOnOff, protocol.ON)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -330,15 +207,7 @@ func (mb *b19client) FloorHeatingAntiFreezeOn(data []uint16) (results *protocol.
 
 // FloorHeatingAntiFreezeOff sends the OFF command for Floor Heating unit AntiFreeze function to gateway
 func (mb *b19client) FloorHeatingAntiFreezeOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	len_data := uint16(len(data) + 4)
-	datalenarr := PrependUint16(data, len_data)
-	newArr := PrependUint16(datalenarr, protocol.OFF)
-	senddata := dataBlockArray(newArr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCodeGateway,
-		FunctionCode: protocol.FuncCodeGatewayFloorHeatingAntiFreezeOnOff,
-		Data:         senddata,
-	}
+	request := OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingAntiFreezeOnOff, protocol.OFF)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
