@@ -189,7 +189,7 @@ func (mb *b27client) FloorHeatingOff(data []uint16) (results *protocol.ProtocolD
 	return resp, nil
 }
 
-func (mb *b27client) ReadGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
+func (mb *b27client) ReadGateway() (results *protocol.ProtocolDataUnit, err error) {
 	return nil, fmt.Errorf("zhonghong-b27 client: does not support following protocol")
 }
 

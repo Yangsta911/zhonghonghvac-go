@@ -5,7 +5,7 @@ import "github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 // Client interface for both B27 and B19 controllers
 type Client interface {
 	// Bit access
-	ReadGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) // change back to hardcoded value
+	ReadGateway() (results *protocol.ProtocolDataUnit, err error) // change back to hardcoded value
 	EditGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error)
 	On(data []uint16) (results *protocol.ProtocolDataUnit, err error)
 	Off(data []uint16) (results *protocol.ProtocolDataUnit, err error)

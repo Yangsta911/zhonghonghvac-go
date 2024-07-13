@@ -19,8 +19,12 @@ func NewB19Client(handler api.ClientHandler) api.Client {
 }
 
 // ReadGateway returns data related to the gateway
-func (mb *b19client) ReadGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeReadGateway)
+func (mb *b19client) ReadGateway() (results *protocol.ProtocolDataUnit, err error) {
+	request := protocol.ProtocolDataUnit{
+		Header:       protocol.HeadCodeReadGateway,
+		FunctionCode: protocol.FuncCodeReadGateway,
+		Data:         []byte{0x00, 0x00, 0x00, 0x00},
+	}
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
