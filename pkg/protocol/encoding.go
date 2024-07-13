@@ -1,9 +1,7 @@
-package client
+package protocol
 
 import (
 	"encoding/binary"
-
-	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 )
 
 // CalculateByteSum calculates the sum of a byte slice and returns the least significant byte.
@@ -31,12 +29,12 @@ func PrependUint16(slice []uint16, element uint16) []uint16 {
 	return newSlice
 }
 
-func NormalEncode(data []uint16, funccode byte) protocol.ProtocolDataUnit {
+func NormalEncode(data []uint16, funccode byte) ProtocolDataUnit {
 	len_data := uint16(len(data) + 4)
 	newArr := PrependUint16(data, len_data)
 	addressLen := dataBlockArray(newArr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCode,
+	request := ProtocolDataUnit{
+		Header:       HeadCode,
 		FunctionCode: funccode,
 		Address:      addressLen,
 	}
@@ -44,7 +42,7 @@ func NormalEncode(data []uint16, funccode byte) protocol.ProtocolDataUnit {
 	return request
 }
 
-func OnOffEncode(data []uint16, funccode byte, OnOff uint16) protocol.ProtocolDataUnit {
+func OnOffEncode(data []uint16, funccode byte, OnOff uint16) ProtocolDataUnit {
 	address := data[:2]
 	len_data := uint16(len(address) + 4)
 	newArr := PrependUint16(address, len_data)
@@ -52,9 +50,9 @@ func OnOffEncode(data []uint16, funccode byte, OnOff uint16) protocol.ProtocolDa
 	commands := data[2:]
 	newArr = PrependUint16(commands, OnOff)
 	commandsOff := dataBlockArray(newArr)
-	request := protocol.ProtocolDataUnit{
-		Header:       protocol.HeadCode,
-		FunctionCode: protocol.FloorHeatingOnOff,
+	request := ProtocolDataUnit{
+		Header:       HeadCode,
+		FunctionCode: FloorHeatingOnOff,
 		Address:      addressLen,
 		Commands:     commandsOff,
 	}

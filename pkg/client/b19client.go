@@ -35,7 +35,7 @@ func (mb *b19client) ReadGateway() (results *protocol.ProtocolDataUnit, err erro
 
 // EditGateway edits the data related to the gateway
 func (mb *b19client) EditGateway(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeEditGateway)
+	request := protocol.NormalEncode(data, protocol.FuncCodeEditGateway)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (mb *b19client) EditGateway(data []uint16) (results *protocol.ProtocolDataU
 
 // On sends the ON command for HVAC to gateway
 func (mb *b19client) On(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeGatewayOnOff, protocol.ON)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeGatewayOnOff, protocol.ON)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -57,7 +57,7 @@ func (mb *b19client) On(data []uint16) (results *protocol.ProtocolDataUnit, err 
 
 // Off sends the OFF command for HVAC to gateway
 func (mb *b19client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeGatewayOnOff, protocol.OFF)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeGatewayOnOff, protocol.OFF)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (mb *b19client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err
 
 // TempControl sends the temperature control command for HVAC to gateway
 func (mb *b19client) TempControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeGatewayTemp)
+	request := protocol.NormalEncode(data, protocol.FuncCodeGatewayTemp)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (mb *b19client) TempControl(data []uint16) (results *protocol.ProtocolDataU
 
 // Control sends the control mode command for HVAC to gateway
 func (mb *b19client) Control(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeGatewayControl)
+	request := protocol.NormalEncode(data, protocol.FuncCodeGatewayControl)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (mb *b19client) Control(data []uint16) (results *protocol.ProtocolDataUnit,
 
 // WindSpeedControl sends the wind speed control command for HVAC to gateway
 func (mb *b19client) WindSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeGatewayWindSpeed)
+	request := protocol.NormalEncode(data, protocol.FuncCodeGatewayWindSpeed)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -101,7 +101,7 @@ func (mb *b19client) WindSpeedControl(data []uint16) (results *protocol.Protocol
 
 // WindDirControl sends the wind direction control command for HVAC to gateway
 func (mb *b19client) WindDirControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeGatewayWindDir)
+	request := protocol.NormalEncode(data, protocol.FuncCodeGatewayWindDir)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -112,7 +112,7 @@ func (mb *b19client) WindDirControl(data []uint16) (results *protocol.ProtocolDa
 
 // FreshAirOn sends the ON command for Fresh Air ventilation unit to gateway
 func (mb *b19client) FreshAirOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeGatewayNewAirOnOff, protocol.ON)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeGatewayNewAirOnOff, protocol.ON)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ func (mb *b19client) FreshAirOn(data []uint16) (results *protocol.ProtocolDataUn
 
 // FreshAirOff sends the OFF command for Fresh Air ventilation unit to gateway
 func (mb *b19client) FreshAirOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeGatewayNewAirOnOff, protocol.OFF)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeGatewayNewAirOnOff, protocol.OFF)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -134,7 +134,7 @@ func (mb *b19client) FreshAirOff(data []uint16) (results *protocol.ProtocolDataU
 
 // FreshAirModeControl sends the mode control command for Fresh Air ventilation unit to gateway
 func (mb *b19client) FreshAirModeControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeGatewayNewAirMode)
+	request := protocol.NormalEncode(data, protocol.FuncCodeGatewayNewAirMode)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -145,7 +145,7 @@ func (mb *b19client) FreshAirModeControl(data []uint16) (results *protocol.Proto
 
 // FreshAirSpeedControl sends the speed control command for Fresh Air ventilation unit to gateway
 func (mb *b19client) FreshAirSpeedControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeGatewayNewAirSpeed)
+	request := protocol.NormalEncode(data, protocol.FuncCodeGatewayNewAirSpeed)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -156,7 +156,7 @@ func (mb *b19client) FreshAirSpeedControl(data []uint16) (results *protocol.Prot
 
 // FloorHeatingOn sends the ON command for Floor Heating unit to gateway
 func (mb *b19client) FloorHeatingOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingOnOff, protocol.ON)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingOnOff, protocol.ON)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -167,7 +167,7 @@ func (mb *b19client) FloorHeatingOn(data []uint16) (results *protocol.ProtocolDa
 
 // FloorHeatingOff sends the OFF command for Floor Heating unit to gateway
 func (mb *b19client) FloorHeatingOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingOnOff, protocol.OFF)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingOnOff, protocol.OFF)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -178,7 +178,7 @@ func (mb *b19client) FloorHeatingOff(data []uint16) (results *protocol.ProtocolD
 
 // FloorHeatingTemp sends the temperature control command for Floor Heating unit to gateway
 func (mb *b19client) FloorHeatingTemp(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeGatewayFloorHeatingTemp)
+	request := protocol.NormalEncode(data, protocol.FuncCodeGatewayFloorHeatingTemp)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -189,7 +189,7 @@ func (mb *b19client) FloorHeatingTemp(data []uint16) (results *protocol.Protocol
 
 // FloorHeatingControl sends the control command for Floor Heating unit to gateway
 func (mb *b19client) FloorHeatingControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeGatewayFloorHeatingControl)
+	request := protocol.NormalEncode(data, protocol.FuncCodeGatewayFloorHeatingControl)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -200,7 +200,7 @@ func (mb *b19client) FloorHeatingControl(data []uint16) (results *protocol.Proto
 
 // FloorHeatingAntiFreezeOn sends the ON command for Floor Heating unit AntiFreeze function to gateway
 func (mb *b19client) FloorHeatingAntiFreezeOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingAntiFreezeOnOff, protocol.ON)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingAntiFreezeOnOff, protocol.ON)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -211,7 +211,7 @@ func (mb *b19client) FloorHeatingAntiFreezeOn(data []uint16) (results *protocol.
 
 // FloorHeatingAntiFreezeOff sends the OFF command for Floor Heating unit AntiFreeze function to gateway
 func (mb *b19client) FloorHeatingAntiFreezeOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingAntiFreezeOnOff, protocol.OFF)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeGatewayFloorHeatingAntiFreezeOnOff, protocol.OFF)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err

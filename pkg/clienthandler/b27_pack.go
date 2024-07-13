@@ -3,7 +3,6 @@ package clienthandler
 import (
 	"fmt"
 
-	"github.com/Yangsta911/zhonghonghvac-go/pkg/client"
 	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
 )
 
@@ -34,7 +33,7 @@ func (p *B27Packager) Encode(pdu *protocol.ProtocolDataUnit) (adu []byte, err er
 	copy(adu[2:4], pdu.Address)
 	adu[4] = pdu.FunctionCode
 	copy(adu[5:5+len(pdu.Commands)], pdu.Commands)
-	adu[length-1] = client.CalculateByteSum(adu[0 : length-1])
+	adu[length-1] = protocol.CalculateByteSum(adu[0 : length-1])
 	return
 }
 
@@ -42,7 +41,7 @@ func (p *B27Packager) Encode(pdu *protocol.ProtocolDataUnit) (adu []byte, err er
 func (p *B27Packager) Decode(adu []byte) (pdu *protocol.ProtocolDataUnit, err error) {
 	length := len(adu)
 	receivedChecksum := uint8(adu[length-1])
-	computedChecksum := client.CalculateByteSum(adu[0 : length-1])
+	computedChecksum := protocol.CalculateByteSum(adu[0 : length-1])
 
 	if computedChecksum != receivedChecksum {
 		err = fmt.Errorf("b27-pack: response checksum '%v' does not match expected '%v'", receivedChecksum, computedChecksum)

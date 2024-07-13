@@ -26,7 +26,7 @@ func NewB27Client(handler ClientHandler) api.Client {
 
 // PerformanceCheck returns performances statistics of the specified HVAC device
 func (mb *b27client) PerformanceCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodePerformanceCheck)
+	request := protocol.NormalEncode(data, protocol.FuncCodePerformanceCheck)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (mb *b27client) PerformanceCheck(data []uint16) (results *protocol.Protocol
 
 // StatusCheck returns status of the specified HVAC device
 func (mb *b27client) StatusCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeStatusCheck)
+	request := protocol.NormalEncode(data, protocol.FuncCodeStatusCheck)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (mb *b27client) StatusCheck(data []uint16) (results *protocol.ProtocolDataU
 
 // On turns on specified HVAC device
 func (mb *b27client) On(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeOnOff, protocol.ON)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeOnOff, protocol.ON)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -59,7 +59,7 @@ func (mb *b27client) On(data []uint16) (results *protocol.ProtocolDataUnit, err 
 
 // Off turns off specified HVAC device
 func (mb *b27client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeOnOff, protocol.OFF)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeOnOff, protocol.OFF)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -70,7 +70,7 @@ func (mb *b27client) Off(data []uint16) (results *protocol.ProtocolDataUnit, err
 
 // ErrorCheck returns the error status code of the specified HVAC device
 func (mb *b27client) ErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeErrorCheck)
+	request := protocol.NormalEncode(data, protocol.FuncCodeErrorCheck)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -81,7 +81,7 @@ func (mb *b27client) ErrorCheck(data []uint16) (results *protocol.ProtocolDataUn
 
 // FreshAirPerformance returns the performance statistics of the specified Fresh Air ventilation device
 func (mb *b27client) FreshAirPerformance(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeFreshAirPerformance)
+	request := protocol.NormalEncode(data, protocol.FuncCodeFreshAirPerformance)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -92,7 +92,7 @@ func (mb *b27client) FreshAirPerformance(data []uint16) (results *protocol.Proto
 
 // FreshAirStatus returns the status of the specified Fresh Air ventilation device
 func (mb *b27client) FreshAirStatus(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeFreshAirStatus)
+	request := protocol.NormalEncode(data, protocol.FuncCodeFreshAirStatus)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -103,7 +103,7 @@ func (mb *b27client) FreshAirStatus(data []uint16) (results *protocol.ProtocolDa
 
 // FreshAirModeControl selects the mode of the specified Fresh Air ventilation device
 func (mb *b27client) FreshAirModeControl(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeFreshAirControl)
+	request := protocol.NormalEncode(data, protocol.FuncCodeFreshAirControl)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -114,7 +114,7 @@ func (mb *b27client) FreshAirModeControl(data []uint16) (results *protocol.Proto
 
 // FreshAirOn turns on the specified Fresh Air ventilation device
 func (mb *b27client) FreshAirOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeFreshAirControl, protocol.ON)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeFreshAirControl, protocol.ON)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -125,7 +125,7 @@ func (mb *b27client) FreshAirOn(data []uint16) (results *protocol.ProtocolDataUn
 
 // FreshAirOn turns off the specified Fresh Air ventilation device
 func (mb *b27client) FreshAirOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FuncCodeFreshAirControl, protocol.OFF)
+	request := protocol.OnOffEncode(data, protocol.FuncCodeFreshAirControl, protocol.OFF)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -136,7 +136,7 @@ func (mb *b27client) FreshAirOff(data []uint16) (results *protocol.ProtocolDataU
 
 // FreshAirErrorCheck returns the error status of the specified Fresh Air ventilation device
 func (mb *b27client) FreshAirErrorCheck(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeFreshAirErrorCheck)
+	request := protocol.NormalEncode(data, protocol.FuncCodeFreshAirErrorCheck)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -147,7 +147,7 @@ func (mb *b27client) FreshAirErrorCheck(data []uint16) (results *protocol.Protoc
 
 // FloorHeatingPerformance returns the performance statistics of the specified Floor Heating device
 func (mb *b27client) FloorHeatingPerformance(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeFloorHeatingPerformance)
+	request := protocol.NormalEncode(data, protocol.FuncCodeFloorHeatingPerformance)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -158,7 +158,7 @@ func (mb *b27client) FloorHeatingPerformance(data []uint16) (results *protocol.P
 
 // FloorHeatingStatus returns the status of the specified Floor Heating device
 func (mb *b27client) FloorHeatingStatus(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := NormalEncode(data, protocol.FuncCodeFloorHeatingStatusCheck)
+	request := protocol.NormalEncode(data, protocol.FuncCodeFloorHeatingStatusCheck)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -169,7 +169,7 @@ func (mb *b27client) FloorHeatingStatus(data []uint16) (results *protocol.Protoc
 
 // FloorHeatingOn turns on the specified Floor Heating device
 func (mb *b27client) FloorHeatingOn(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FloorHeatingOnOff, protocol.ON)
+	request := protocol.OnOffEncode(data, protocol.FloorHeatingOnOff, protocol.ON)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
@@ -180,7 +180,7 @@ func (mb *b27client) FloorHeatingOn(data []uint16) (results *protocol.ProtocolDa
 
 // FloorHeatingOff turns off the specified Floor Heating device
 func (mb *b27client) FloorHeatingOff(data []uint16) (results *protocol.ProtocolDataUnit, err error) {
-	request := OnOffEncode(data, protocol.FloorHeatingOnOff, protocol.OFF)
+	request := protocol.OnOffEncode(data, protocol.FloorHeatingOnOff, protocol.OFF)
 	resp, err := mb.send(&request)
 	if err != nil {
 		return nil, err
