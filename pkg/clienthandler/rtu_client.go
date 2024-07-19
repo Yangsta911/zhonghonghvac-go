@@ -46,6 +46,9 @@ func (mb *rtuSerialTransporter) Send(aduRequest []byte) (aduResponse []byte, err
 	if err != nil {
 		return
 	}
+	if bytesToRead == -1 {
+		bytesToRead = specialCalculateResponseLength(aduRequest, data[3])
+	}
 	if data[1] == function1 || data[4] == function2 {
 		if n < bytesToRead {
 			if bytesToRead > rtuMinSize && bytesToRead <= rtuMaxSize {
@@ -129,6 +132,35 @@ func calculateResponseLength(adu []byte) int {
 
 	case protocol.FuncCodeGatewayNewAirSpeed:
 		length = 7
+
+	case protocol.FuncCodeACStatus:
+		if adu[2] == 0x01 {
+			length = 15
+		} else if adu[2] == 0x0F {
+			length = int(adu[3])*10 + 5
+		} else if adu[2] == 0x04 || adu[2] == 0xFF {
+			length = -1
+		} else if adu[2] == 0x02 {
+			length = -1
+		}
+
+	case protocol.FuncCodeFreshAirStatus:
+		if adu[2] == 0x01 {
+			length = 15
+		} else if adu[2] == 0x02 || adu[2] == 0xFF {
+			length = -1
+		} else if adu[2] == 0x0F {
+			length = int(adu[3])*11 + 4
+		}
+
+	case protocol.FuncCodeFloorHeatingStatusCheck:
+		if adu[2] == 0x01 {
+			length = 15
+		} else if adu[2] == 0x02 || adu[2] == 0xFF {
+			length = -1
+		} else if adu[2] == 0x0F {
+			length = int(adu[3])*11 + 4
+		}
 	default:
 	}
 	switch protocol.FuncCode(adu[4]) {
@@ -161,5 +193,45 @@ func calculateResponseLength(adu []byte) int {
 	default:
 	}
 
+	return length
+}
+
+func specialCalculateResponseLength(adu []byte, numDevices byte) int {
+	length := rtuMinSize
+	switch protocol.FuncCode(adu[1]) {
+	case protocol.FuncCodeACStatus:
+		if adu[2] == 0x01 {
+			length = 15
+		} else if adu[2] == 0x0F {
+			length = int(adu[3])*10 + 5
+		} else if adu[2] == 0x04 || adu[2] == 0xFF {
+			length = int(numDevices)*10 + 5
+		} else if adu[2] == 0x02 {
+			length = int(numDevices)*3 + 5
+		}
+
+	case protocol.FuncCodeFreshAirStatus:
+		if adu[2] == 0x01 {
+			length = 15
+		} else if adu[2] == 0x02 {
+			length = int(numDevices)*3 + 5
+		} else if adu[2] == 0xFF {
+			length = int(numDevices)*10 + 5
+		} else if adu[2] == 0x0F {
+			length = int(adu[3])*10 + 5
+		}
+
+	case protocol.FuncCodeFloorHeatingStatusCheck:
+		if adu[2] == 0x01 {
+			length = 15
+		} else if adu[2] == 0x02 {
+			length = int(numDevices)*3 + 5
+		} else if adu[2] == 0xFF {
+			length = int(numDevices)*10 + 5
+		} else if adu[2] == 0x0F {
+			length = int(adu[3])*10 + 5
+		}
+	default:
+	}
 	return length
 }
