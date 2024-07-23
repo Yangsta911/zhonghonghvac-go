@@ -37,7 +37,12 @@ func (mb *rtuSerialTransporter) Send(aduRequest []byte) (aduResponse []byte, err
 	function1 := aduRequest[1]
 	function2 := aduRequest[4]
 	bytesToRead := calculateResponseLength(aduRequest)
-	time.Sleep(mb.calculateDelay(len(aduRequest) + bytesToRead))
+	if bytesToRead == -1 {
+		time.Sleep(mb.calculateDelay(325 + bytesToRead))
+	} else {
+		time.Sleep(mb.calculateDelay(len(aduRequest) + bytesToRead))
+
+	}
 
 	var n int
 	var n1 int
@@ -49,6 +54,7 @@ func (mb *rtuSerialTransporter) Send(aduRequest []byte) (aduResponse []byte, err
 	if bytesToRead == -1 {
 		bytesToRead = specialCalculateResponseLength(aduRequest, data[3])
 	}
+
 	if data[1] == function1 || data[4] == function2 {
 		if n < bytesToRead {
 			if bytesToRead > rtuMinSize && bytesToRead <= rtuMaxSize {
@@ -139,16 +145,16 @@ func calculateResponseLength(adu []byte) int {
 		} else if adu[2] == 0x0F {
 			length = int(adu[3])*10 + 5
 		} else if adu[2] == 0x04 || adu[2] == 0xFF {
-			length = -1
+			length = -1 //return -1 due to length being variable depending on number of devices
 		} else if adu[2] == 0x02 {
-			length = -1
+			length = -1 //return -1 due to length being variable depending on number of devices
 		}
 
 	case protocol.FuncCodeFreshAirStatus:
 		if adu[2] == 0x01 {
 			length = 15
 		} else if adu[2] == 0x02 || adu[2] == 0xFF {
-			length = -1
+			length = -1 //return -1 due to length being variable depending on number of devices
 		} else if adu[2] == 0x0F {
 			length = int(adu[3])*11 + 4
 		}
@@ -157,7 +163,7 @@ func calculateResponseLength(adu []byte) int {
 		if adu[2] == 0x01 {
 			length = 15
 		} else if adu[2] == 0x02 || adu[2] == 0xFF {
-			length = -1
+			length = -1 //return -1 due to length being variable depending on number of devices
 		} else if adu[2] == 0x0F {
 			length = int(adu[3])*11 + 4
 		}
