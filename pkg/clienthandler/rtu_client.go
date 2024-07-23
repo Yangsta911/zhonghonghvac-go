@@ -38,7 +38,7 @@ func (mb *rtuSerialTransporter) Send(aduRequest []byte) (aduResponse []byte, err
 	function2 := aduRequest[4]
 	bytesToRead := calculateResponseLength(aduRequest)
 	if bytesToRead == -1 {
-		time.Sleep(mb.calculateDelay(325 + bytesToRead))
+		time.Sleep(mb.calculateDelay(getMaxLength(32) + bytesToRead)) //32 is the max number of devices allowed
 	} else {
 		time.Sleep(mb.calculateDelay(len(aduRequest) + bytesToRead))
 
@@ -106,6 +106,10 @@ func (mb *rtuSerialTransporter) calculateDelay(chars int) time.Duration {
 		frameDelay = 35000000 / mb.SerialPort.BaudRate
 	}
 	return time.Duration(characterDelay*chars+frameDelay) * time.Microsecond
+}
+
+func getMaxLength(devices int) int {
+	return 5 + devices*10
 }
 
 // CalculateResponseLength calculates the expected number of bytes in a response.
