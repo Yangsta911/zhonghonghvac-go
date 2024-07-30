@@ -4,9 +4,16 @@ type FanSpeed byte // 风速，B19 and B27
 
 const (
 	FanSpeedAuto FanSpeed = 0x00 // 自动
-	FanSpeedLow  FanSpeed = 0x01 // 低速
+	FanSpeedLow  FanSpeed = 0x04 // 低速
 	FanSpeedMid  FanSpeed = 0x02 // 中速
-	FanSpeedHigh FanSpeed = 0x03 // 高速
+	FanSpeedHigh FanSpeed = 0x01 // 高速
+
+	// 以下为非常规风速
+	FanSpeedMidHigh FanSpeed = 0x03 // 中高速
+	FanSpeedMidLow  FanSpeed = 0x05 // 中低速
+	FanSpeedBreeze  FanSpeed = 0x06 // 微风
+	FanSpeedTurbo   FanSpeed = 0x07 // 超强
+	FanSpeedStop    FanSpeed = 0x08 // 停止
 )
 
 type ACMode byte // 空调模式，B19 and B27
@@ -16,6 +23,13 @@ const (
 	ACModeCooling    ACMode = 0x01 // 设定制冷
 	ACModeVentilate  ACMode = 0x04 // 设定送风
 	ACModeDehumidify ACMode = 0x08 // 设定除湿
+
+	// 以下为非常规模式
+	ACModeFresh          ACMode = 0x03 // 设定清爽
+	ACModeAutoDehumidify ACMode = 0x05 // 设定自动除湿
+	ACModeSleep          ACMode = 0x06 // 设定贴心睡眠
+	ACModeFloorHeating   ACMode = 0x09 // 设定地暖
+	ACModeTurboHeating   ACMode = 0x0A // 设定强热（地暖和制热同时开启）
 )
 
 type ACStatus byte // 空调状态，B19 and B27
@@ -145,4 +159,12 @@ const (
 	HeadCodeReadGateway byte = 0xFF
 	ON                  byte = 0x01
 	OFF                 byte = 0x00
+)
+
+type Validation uint
+
+const (
+	ValidationNone Validation = iota
+	ValidationOdd
+	ValidationEven
 )
