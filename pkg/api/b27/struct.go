@@ -1,6 +1,9 @@
 package b27
 
-import "github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
+import (
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/api"
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
+)
 
 type ACPerformanceRequest struct {
 	Addr string `json:"addr"`
@@ -19,7 +22,7 @@ type ACStatusRequest struct {
 }
 
 type ACStatusResponse struct {
-	protocol.AC
+	api.AC
 }
 
 type ACControlRequest struct {

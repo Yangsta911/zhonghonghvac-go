@@ -1,10 +1,13 @@
 package b19
 
-import "github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
+import (
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/api"
+	"github.com/Yangsta911/zhonghonghvac-go/pkg/protocol"
+)
 
 type ACStatusResponse struct {
-	ACs   []protocol.AC `json:"ac_status"`
-	Total int           `json:"total"`
+	ACs   []api.AC `json:"ac_status"`
+	Total int      `json:"total"`
 }
 
 type GatewayInfo struct {
